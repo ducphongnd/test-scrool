@@ -189,7 +189,7 @@
     
     // Mobile Scroll Fix - Disable rotation trick immediately on mobile
     function initMobileScrollFix(support) {
-      if (support.scrollTimeline) return;
+      if (support.isMobile) return;
    
       
       // IMMEDIATELY apply fallback on mobile
