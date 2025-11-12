@@ -171,12 +171,13 @@ p {
    MOBILE FALLBACK - If rotation doesn't work
    ======================================== */
 
-/* Alternative layout for mobile when rotation fails */
+/* Alternative layout for mobile - ALWAYS applied on mobile */
 @media screen and (max-width: 768px) {
-  /* This will be applied via JavaScript if scroll doesn't work */
+  /* Mobile fallback: Disable rotation, use vertical scroll */
   .mobile-fallback .external {
     overflow: visible !important;
     height: auto !important;
+    min-height: 100vh;
   }
   
   .mobile-fallback .horizontal-scroll-wrapper {
@@ -186,30 +187,62 @@ p {
     height: auto !important;
     overflow-y: visible !important;
     overflow-x: hidden !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    padding: 2rem 1rem !important;
-    justify-content: center !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    padding: 1rem !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
     min-height: auto !important;
+    perspective: none !important;
+    transform-style: flat !important;
   }
   
   .mobile-fallback .img-wrapper {
     transform: none !important;
     -webkit-transform: none !important;
     width: 100% !important;
-    max-width: 90% !important;
-    margin: 0 auto 2rem !important;
+    max-width: 95% !important;
+    margin: 0 auto 1.5rem !important;
     min-height: auto !important;
+    display: block !important;
   }
   
   .mobile-fallback .img-wrapper a {
     width: 100%;
     display: block;
+    padding: 1rem;
   }
   
   .mobile-fallback img {
     max-width: 100% !important;
+    width: 100% !important;
     height: auto !important;
-    max-height: none !important;
+    max-height: 70vh !important;
+    object-fit: contain;
+  }
+  
+  /* Smooth scrolling */
+  .mobile-fallback .horizontal-scroll-wrapper {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Body scroll for mobile fallback */
+  html.mobile-fallback,
+  body.mobile-fallback {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  /* Ensure body is the scroll container */
+  body.mobile-fallback .external {
+    position: static !important;
+  }
+  
+  body.mobile-fallback .horizontal-scroll-wrapper {
+    position: static !important;
   }
 }
