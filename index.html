@@ -189,9 +189,8 @@
     
     // Mobile Scroll Fix - Disable rotation trick immediately on mobile
     function initMobileScrollFix(support) {
-      if (!support) return;
-      
-      console.log('📱 Mobile detected - Applying mobile layout (rotation trick disabled)');
+      if (!support.scrollTimeline) return;
+   
       
       // IMMEDIATELY apply fallback on mobile
       // Rotation trick doesn't work well on mobile Chrome even with scroll-driven support
