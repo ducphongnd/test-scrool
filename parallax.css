@@ -23,6 +23,17 @@ body {
 .external {
   overflow: hidden;
   height: 100vh;
+  /* Mobile fixes */
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+/* Mobile viewport fix */
+@media screen and (max-width: 768px) {
+  .external {
+    height: 100svh;
+    height: -webkit-fill-available;
+  }
 }
 
 .horizontal-scroll-wrapper {
@@ -37,8 +48,31 @@ body {
   padding: 0;
   height: 100vw;
   perspective: 1px;
-	transform-style: preserve-3d;
+  transform-style: preserve-3d;
   padding-bottom: 10rem;
+  
+  /* Critical for mobile scroll */
+  -webkit-overflow-scrolling: touch;
+  will-change: transform;
+  overscroll-behavior: contain;
+  
+  /* Force hardware acceleration */
+  -webkit-transform: rotate(-90deg) translate3d(0,-100vh,0);
+  -webkit-transform-style: preserve-3d;
+}
+
+/* Mobile scroll fixes */
+@media screen and (max-width: 768px) {
+  .horizontal-scroll-wrapper {
+    /* Ensure scrollable on mobile */
+    overflow-y: scroll !important;
+    -webkit-overflow-scrolling: touch !important;
+    /* Force minimum scrollable height */
+    min-height: 100vw;
+    /* Reduce perspective for better performance */
+    perspective: 0.5px;
+    -webkit-perspective: 0.5px;
+  }
 }
 .img-wrapper {
   transform: rotate(90deg);
@@ -131,4 +165,51 @@ p {
 .icon svg {
     width: 50px;
     fill: currentcolor;
+}
+
+/* ========================================
+   MOBILE FALLBACK - If rotation doesn't work
+   ======================================== */
+
+/* Alternative layout for mobile when rotation fails */
+@media screen and (max-width: 768px) {
+  /* This will be applied via JavaScript if scroll doesn't work */
+  .mobile-fallback .external {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  
+  .mobile-fallback .horizontal-scroll-wrapper {
+    transform: none !important;
+    -webkit-transform: none !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    padding: 2rem 1rem !important;
+    justify-content: center !important;
+    min-height: auto !important;
+  }
+  
+  .mobile-fallback .img-wrapper {
+    transform: none !important;
+    -webkit-transform: none !important;
+    width: 100% !important;
+    max-width: 90% !important;
+    margin: 0 auto 2rem !important;
+    min-height: auto !important;
+  }
+  
+  .mobile-fallback .img-wrapper a {
+    width: 100%;
+    display: block;
+  }
+  
+  .mobile-fallback img {
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
 }

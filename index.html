@@ -170,13 +170,76 @@
       // Also log to console for debugging
       console.log('🔍 Scroll-Driven Support Check:', support);
       console.log('📊 Full Support Object:', JSON.stringify(support, null, 2));
+      
+      // Return support object for mobile scroll fix
+      return support;
     }
 
     // Run check when page loads
+    let supportInfo;
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', checkScrollDrivenSupport);
+      document.addEventListener('DOMContentLoaded', () => {
+        supportInfo = checkScrollDrivenSupport();
+        initMobileScrollFix(supportInfo);
+      });
     } else {
-      checkScrollDrivenSupport();
+      supportInfo = checkScrollDrivenSupport();
+      initMobileScrollFix(supportInfo);
+    }
+    
+    // Mobile Scroll Fix
+    function initMobileScrollFix(support) {
+      if (!support || !support.isMobile) return;
+      
+      console.log('📱 Initializing mobile scroll fix...');
+      
+      const wrapper = document.querySelector('.horizontal-scroll-wrapper');
+      const external = document.querySelector('.external');
+      
+      if (!wrapper) {
+        console.error('❌ Wrapper not found');
+        return;
+      }
+      
+      // Force enable scroll
+      wrapper.style.overflowY = 'scroll';
+      wrapper.style.WebkitOverflowScrolling = 'touch';
+      wrapper.style.height = '100vw';
+      
+      // Ensure content is scrollable
+      const minScrollHeight = window.innerWidth * 3; // 3x viewport width
+      if (wrapper.scrollHeight < minScrollHeight) {
+        wrapper.style.minHeight = minScrollHeight + 'px';
+        console.log('📏 Set min height to:', minScrollHeight);
+      }
+      
+      // Debug scroll
+      let scrollCount = 0;
+      wrapper.addEventListener('scroll', function() {
+        scrollCount++;
+        if (scrollCount % 20 === 0) {
+          console.log('✅ SCROLL WORKING - Position:', this.scrollTop, '/', this.scrollHeight);
+        }
+      }, { passive: true });
+      
+      // Test scroll after load
+      setTimeout(() => {
+        const initialScroll = wrapper.scrollTop;
+        wrapper.scrollTop = 5;
+        
+        setTimeout(() => {
+          if (wrapper.scrollTop > initialScroll) {
+            console.log('✅ Scroll is working! Position:', wrapper.scrollTop);
+          } else {
+            console.warn('⚠️ Scroll may not be working. ScrollTop:', wrapper.scrollTop);
+            console.log('ScrollHeight:', wrapper.scrollHeight, 'ClientHeight:', wrapper.clientHeight);
+            
+            // Apply fallback CSS class
+            document.body.classList.add('mobile-fallback');
+            console.log('🔄 Applied mobile-fallback class - scroll should work now');
+          }
+        }, 200);
+      }, 1000);
     }
   })();
 </script>
